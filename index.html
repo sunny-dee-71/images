@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Image Search (API-Based)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .image-results {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    .image-results img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Google Image Search (API-Based)</h1>
+  <p>Type a search term to find images:</p>
+
+  <!-- Input field and search button -->
+  <input type="text" id="search-query" placeholder="Enter search term...">
+  <button onclick="searchImages()">Search</button>
+
+  <!-- Div for displaying image results -->
+  <div class="image-results" id="image-results"></div>
+
+  <script>
+    // Replace with your actual API key and CSE ID
+    const apiKey = 'AIzaSyA_y5U7AgKtJrk-u5k0rNVzjM2v8Tgqtmo'; // Your API key
+    const cx = 'f4606d85bff4449fb'; // Your Custom Search Engine ID
+
+    function searchImages() {
+      const query = document.getElementById('search-query').value; // Get the user's query
+      const url = `https://www.googleapis.com/customsearch/v1?q=${query}&cx=${cx}&searchType=image&key=${apiKey}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => displayImages(data))
+        .catch(error => console.error('Error fetching image results:', error));
+    }
+
+    function displayImages(data) {
+      const resultsDiv = document.getElementById('image-results');
+      resultsDiv.innerHTML = ''; // Clear previous results
+
+      if (data.items) {
+        data.items.forEach(item => {
+          const imgElement = document.createElement('img');
+          imgElement.src = item.link; // The URL of the image
+          imgElement.alt = item.title;
+          resultsDiv.appendChild(imgElement);
+        });
+      } else {
+        resultsDiv.innerHTML = 'No images found.';
+      }
+    }
+  </script>
+</body>
+</html>
