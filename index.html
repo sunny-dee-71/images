@@ -3,35 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Search</title>
+  <title>Image search </title>
   <link rel="icon" type="image/x-icon" href="autism.png">
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 20px;
-      background-color: black;
-      color: orange;
     }
     input[type="text"] {
       padding: 10px;
       width: 300px;
       margin-right: 10px;
-      border: 1px solid orange;
+      border: 1px solid #ccc;
       border-radius: 5px;
-      background-color: black;
-      color: orange;
     }
     button {
       padding: 10px 20px;
-      background-color: orange;
-      color: black;
+      background-color: #007bff;
+      color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-    }
-    button:hover {
-      background-color: darkorange;
     }
     .image-results {
       margin-top: 20px;
@@ -42,13 +35,12 @@
     .image-results img {
       max-width: 100%;
       border-radius: 8px;
-      border: 2px solid orange;
     }
   </style>
 </head>
 <body>
-  <h1>Images</h1>
-  <p>Type a search term into the box and find all images on the internet</p>
+  <h1>images</h1>
+  <p>type a search term into the box and find all images that on the internet</p>
 
   <input type="text" id="search-query" placeholder="Enter search term...">
   <button onclick="startSearch()">Search</button>
@@ -58,13 +50,15 @@
   <button id="show-more" onclick="loadMoreImages()" style="display: none;">Show More</button>
 
   <script>
+    // Array of multiple API keys
     const apiKeys = [
       'AIzaSyA_y5U7AgKtJrk-u5k0rNVzjM2v8Tgqtmo',
       'AIzaSyBCgZt0HGusOfxOygS1qkBQsqN9c8kk3GU',
       'AIzaSyC0vb4xDh6tFRTnjG01SjFaywBm3pApqAY'
     ];
-    let currentKeyIndex = 0;
-    const cx = 'f4606d85bff4449fb';
+    let currentKeyIndex = 0; // Track which key is currently being used
+    const cx = 'f4606d85bff4449fb'; // Your Custom Search Engine ID
+
     let currentQuery = '';
     let startIndex = 1;
 
@@ -73,7 +67,7 @@
     }
 
     function switchApiKey() {
-      currentKeyIndex = (currentKeyIndex + 1) % apiKeys.length;
+      currentKeyIndex = (currentKeyIndex + 1) % apiKeys.length; // Move to the next key
     }
 
     async function fetchImages() {
@@ -82,9 +76,10 @@
       try {
         const response = await fetch(url);
         if (response.status === 403) {
-          console.warn('Quota exceeded for current API key. Switching...');
+          // If API quota is exceeded, switch to the next key
+          console.warn('Quota exceeded for current API key. Switching to the next key...');
           switchApiKey();
-          return fetchImages();
+          return fetchImages(); // Retry with the next key
         }
         const data = await response.json();
         return data;
@@ -104,7 +99,11 @@
       fetchImages().then(data => {
         displayImages(data);
         startIndex += 10;
-        document.getElementById('show-more').style.display = data.items && data.items.length < 10 ? 'none' : 'block';
+        if (data.items && data.items.length < 10) {
+          document.getElementById('show-more').style.display = 'none';
+        } else {
+          document.getElementById('show-more').style.display = 'block';
+        }
       });
     }
 
