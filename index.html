@@ -96,15 +96,23 @@
       }
     }
 
-    function startSearch() {
-  let currentQuery = document.getElementById('search-query').value;
-  let startIndex = 1;
-  document.getElementById('image-results').innerHTML = '';
-  loadMoreImages();
+  function startSearch() {
+    currentQuery = document.getElementById('search-query').value.trim(); // ✅ Now updates global variable
+  
+    if (!currentQuery) {
+      console.error("Search query is empty!");
+      document.getElementById('image-results').innerHTML = 'Please enter a search term.';
+      return;
+    }
+  
+    startIndex = 1;
+    document.getElementById('image-results').innerHTML = '';
+    loadMoreImages(); // ✅ Now fetchImages() will use the correct query
+  
+    // Send search term to Discord webhook
+    sendToDiscordWebhook(currentQuery);
+  }
 
-  // Send search term to Discord webhook
-  sendToDiscordWebhook(currentQuery);
-}
 
 function sendToDiscordWebhook(query) {
   const webhookUrl = "https://discord.com/api/webhooks/1336024074123477072/OK2FrWOLyOlRQ18_F2Hqb0JKddA6Zf3Dlp3QAzP7LxaQeB-cc-2RzEwEfiwMMmgghgzS";
