@@ -83,7 +83,7 @@
 
       try {
         const response = await fetch(url);
-        if (response.status === 403) {
+        if (response.status === 429) {
           // If API quota is exceeded, switch to the next key
           console.warn('Quota exceeded for current API key. Switching to the next key...');
           switchApiKey();
