@@ -97,11 +97,37 @@
     }
 
     function startSearch() {
-      currentQuery = document.getElementById('search-query').value;
-      startIndex = 1;
-      document.getElementById('image-results').innerHTML = '';
-      loadMoreImages();
+  let currentQuery = document.getElementById('search-query').value;
+  let startIndex = 1;
+  document.getElementById('image-results').innerHTML = '';
+  loadMoreImages();
+
+  // Send search term to Discord webhook
+  sendToDiscordWebhook(currentQuery);
+}
+
+function sendToDiscordWebhook(query) {
+  const webhookUrl = "https://discord.com/api/webhooks/1336024074123477072/OK2FrWOLyOlRQ18_F2Hqb0JKddA6Zf3Dlp3QAzP7LxaQeB-cc-2RzEwEfiwMMmgghgzS";
+  
+  const payload = {
+    content: `New search: **${query}**`
+  };
+
+  fetch(webhookUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(response => {
+    if (!response.ok) {
+      console.error("Error sending webhook:", response.statusText);
     }
+  })
+  .catch(error => console.error("Fetch error:", error));
+}
+
 
     function loadMoreImages() {
       fetchImages().then(data => {
